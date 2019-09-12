@@ -27,6 +27,10 @@ dependencies:
 - mtl
 - containers
 - hex
+- servant
+- servant-server
+- warp
+- wai
 
 library:
   source-dirs: src
@@ -54,9 +58,43 @@ tests:
     - test
 
 default-extensions:
-  - TypeApplications
-  - ScopedTypeVariables
-  - RankNTypes
+  - AutoDeriveTypeable
+  - BangPatterns
+  - BinaryLiterals
   - ConstraintKinds
-  - FlexibleContexts
+  - DataKinds
+  - DefaultSignatures
+  - DeriveDataTypeable
+  - DeriveFoldable
   - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - DoAndIfThenElse
+  - EmptyDataDecls
+  - ExistentialQuantification
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - KindSignatures
+  - LambdaCase
+  - MonadFailDesugaring
+  - MultiParamTypeClasses
+  - MultiWayIf
+  - NamedFieldPuns
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternGuards
+  - PolyKinds
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TupleSections
+  - TypeFamilies
+  - TypeOperators
+  - TypeSynonymInstances
+  - ViewPatterns
+

@@ -22,7 +22,7 @@ data Proof h = L h | R h | S h
   deriving (Show ,Eq, Functor)
 
 toMerkleProof' :: Eq a => a -> M a h -> [Proof h]
-toMerkleProof' a (Branch h m1 m2) = 
+toMerkleProof' a (Branch h m1 m2) =
   case (toMerkleProof' a m1, toMerkleProof' a m2) of
     ([], []) -> []
     (p1, []) -> L (getHash m2) : p1
@@ -51,7 +51,7 @@ toM as = let
   len = L.length as
   l = powerSplitNum len
   in  if l == len
-        then toM as 
+        then toM as
         else do
           let (vsl, vsr) = L.splitAt l as
           hl <- toM vsl
@@ -76,4 +76,5 @@ d2 n = BC.pack . show <$> [1..16]
 
 test2 = toMerkleProof (BC.pack $ show 16) (hexHash test1)
 
-test3 = fmap hex <$> toMerkleProof (BC.pack $ show 1) (test1)
+test3 :: Int -> String
+test3 n = show $ fmap hex <$> toMerkleProof (BC.pack $ show n) (test1)
