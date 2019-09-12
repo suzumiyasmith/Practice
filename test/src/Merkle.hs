@@ -15,16 +15,26 @@ type Merkle a h = Maybe (M a h)
 data M a h = Branch h (M a h) (M a h) | Leaf h a
   deriving Show
 
-toMerkleProof :: Eq a => a -> M a h -> [h]
-toMerkleProof a m = L.reverse $ getHash m : toMerkleProof' a m
+toMerkleProof :: Eq a => a -> M a h -> [Proof h]
+toMerkleProof a m = L.reverse $ S (getHash m) : toMerkleProof' a m
 
-toMerkleProof' :: Eq a => a -> M a h -> [h]
+data Proof h = L h | R h | S h
+  deriving (Show ,Eq, Functor)
+
+toMerkleProof' :: Eq a => a -> M a h -> [Proof h]
 toMerkleProof' a (Branch h m1 m2) = 
   case (toMerkleProof' a m1, toMerkleProof' a m2) of
     ([], []) -> []
-    (p1, []) -> getHash m2 : p1
-    ([], p2) -> getHash m1 : p2
-toMerkleProof' a (Leaf h b) = if a == b then [h] else []
+    (p1, []) -> L (getHash m2) : p1
+    ([], p2) -> R (getHash m1) : p2
+toMerkleProof' a (Leaf h b) = if a == b then [S h] else []
+
+validateMerkleProof :: [Proof B.ByteString] -> Bool
+validateMerkleProof [] = True
+validateMerkleProof [h] = True
+validateMerkleProof [h1, h2] = h1 == h2
+validateMerkleProof (S h1 : L h2 : hs) = validateMerkleProof (S h3 : hs) where h3 = hashIt (append h1 h2)
+validateMerkleProof (S h1 : R h2 : hs) = validateMerkleProof (S h3 : hs) where h3 = hashIt (append h2 h1)
 
 toTree :: M a h -> Tree (h, Maybe a)
 toTree (Leaf h a) = Node (h, Just a) []
@@ -66,3 +76,4 @@ d2 n = BC.pack . show <$> [1..16]
 
 test2 = toMerkleProof (BC.pack $ show 16) (hexHash test1)
 
+test3 = fmap hex <$> toMerkleProof (BC.pack $ show 1) (test1)

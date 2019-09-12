@@ -59,3 +59,4 @@ default-extensions:
   - RankNTypes
   - ConstraintKinds
   - FlexibleContexts
+  - DeriveFunctor
